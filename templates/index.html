@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Defender - Space Shooter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(to bottom, #0a0e27 0%, #1a1a3e 50%, #0f0f1e 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .container {
+            text-align: center;
+            z-index: 10;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px #00ffff, 0 0 30px #00ffff;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+
+            0%,
+            100% {
+                text-shadow: 0 0 20px #00ffff, 0 0 30px #00ffff;
+            }
+
+            50% {
+                text-shadow: 0 0 30px #00ffff, 0 0 50px #00ffff, 0 0 70px #00ffff;
+            }
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            font-size: 1.2em;
+            max-width: 800px;
+        }
+
+        .info-item {
+            background: rgba(0, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 2px solid #00ffff;
+        }
+
+        canvas {
+            border: 3px solid #00ffff;
+            background: #000;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            display: block;
+            margin: 20px auto;
+        }
+
+        .controls {
+            margin: 20px 0;
+            font-size: 0.9em;
+            color: #aaa;
+        }
+
+        button {
+            background: linear-gradient(to bottom, #00ffff, #0088ff);
+            border: none;
+            color: #000;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 255, 255, 0.6);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .game-over {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            border: 3px solid #ff0066;
+            box-shadow: 0 0 50px rgba(255, 0, 102, 0.8);
+            z-index: 1000;
+        }
+
+        .game-over.active {
+            display: block;
+        }
+
+        .game-over h2 {
+            font-size: 3em;
+            color: #ff0066;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px #ff0066;
+        }
+
+        .game-over .final-score {
+            font-size: 2em;
+            margin: 20px 0;
+        }
+
+        input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #00ffff;
+            color: #fff;
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            margin: 10px;
+            font-family: 'Courier New', monospace;
+        }
+
+        #highScores {
+            margin-top: 20px;
+            text-align: left;
+            max-width: 400px;
+        }
+
+        .score-entry {
+            background: rgba(0, 255, 255, 0.1);
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="stars" id="stars"></div>
+
+    <div class="container">
+        <h1>🚀 COSMIC DEFENDER 🚀</h1>
+
+        <div class="game-info">
+            <div class="info-item">Score: <span id="score">0</span></div>
+            <div class="info-item">Lives: <span id="lives">3</span></div>
+            <div class="info-item">Wave: <span id="wave">1</span></div>
+        </div>
+
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+        <div class="controls">
+            Controls: Arrow Keys to Move | Space to Shoot | P to Pause | Made by Nipson K C
+        </div>
+
+        <button id="startBtn" onclick="startGame()">Start Game</button>
+        <button onclick="togglePause()">Pause/Resume</button>
+    </div>
+
+    <div class="game-over" id="gameOver">
+        <h2>GAME OVER</h2>
+        <div class="final-score">Final Score: <span id="finalScore">0</span></div>
+        <div class="final-score">Wave Reached: <span id="finalWave">1</span></div>
+        <input type="text" id="playerName" placeholder="Enter your name" maxlength="20">
+        <br>
+        <button onclick="saveScore()">Save Score</button>
+        <button onclick="restartGame()">Play Again</button>
+        <div id="highScores"></div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Generate stars background
+        const starsDiv = document.getElementById('stars');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.width = Math.random() * 3 + 'px';
+            star.style.height = star.style.width;
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            starsDiv.appendChild(star);
+        }
+
+        // Game state
+        let gameRunning = false;
+        let gamePaused = false;
+        let score = 0;
+        let lives = 3;
+        let wave = 1;
+        let lastTime = 0;
+
+        // Player
+        const player = {
+            x: canvas.width / 2 - 20,
+            y: canvas.height - 80,
+            width: 40,
+            height: 40,
+            speed: 5,
+            color: '#00ffff'
+        };
+
+        // Arrays for game objects
+        let bullets = [];
+        let enemies = [];
+        let enemyBullets = [];
+        let particles = [];
+        let powerUps = [];
+
+        // Input handling
+        const keys = {};
+        document.addEventListener('keydown', (e) => {
+            keys[e.key] = true;
+            if (e.key === ' ' && gameRunning && !gamePaused) {
+                e.preventDefault();
+                shoot();
+            }
+            if (e.key === 'p' || e.key === 'P') {
+                togglePause();
+            }
+        });
+        document.addEventListener('keyup', (e) => keys[e.key] = false);
+
+        function startGame() {
+            gameRunning = true;
+            gamePaused = false;
+            score = 0;
+            lives = 3;
+            wave = 1;
+            bullets = [];
+            enemies = [];
+            enemyBullets = [];
+            particles = [];
+            powerUps = [];
+            player.x = canvas.width / 2 - 20;
+            player.y = canvas.height - 80;
+
+            document.getElementById('gameOver').classList.remove('active');
+            document.getElementById('startBtn').style.display = 'none';
+
+            spawnWave();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function togglePause() {
+            if (gameRunning) {
+                gamePaused = !gamePaused;
+            }
+        }
+
+        function spawnWave() {
+            enemies = [];
+            const cols = 8;
+            const rows = Math.min(3 + Math.floor(wave / 2), 6);
+
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    enemies.push({
+                        x: col * 90 + 50,
+                        y: row * 60 + 50,
+                        width: 40,
+                        height: 40,
+                        speed: 1 + wave * 0.2,
+                        direction: 1,
+                        shootTimer: Math.random() * 100
+                    });
+                }
+            }
+        }
+
+        function shoot() {
+            bullets.push({
+                x: player.x + player.width / 2 - 2,
+                y: player.y,
+                width: 4,
+                height: 15,
+                speed: 8,
+                color: '#ffff00'
+            });
+        }
+
+        function createParticles(x, y, color, count = 15) {
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 6,
+                    vy: (Math.random() - 0.5) * 6,
+                    size: Math.random() * 3 + 2,
+                    color: color,
+                    life: 1
+                });
+            }
+        }
+
+        function gameLoop(timestamp) {
+            if (!gameRunning) return;
+            if (gamePaused) {
+                requestAnimationFrame(gameLoop);
+                return;
+            }
+
+            const deltaTime = timestamp - lastTime;
+            lastTime = timestamp;
+
+            // Clear canvas
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Update player
+            if (keys['ArrowLeft'] && player.x > 0) player.x -= player.speed;
+            if (keys['ArrowRight'] && player.x < canvas.width - player.width) player.x += player.speed;
+            if (keys['ArrowUp'] && player.y > canvas.height / 2) player.y -= player.speed;
+            if (keys['ArrowDown'] && player.y < canvas.height - player.height) player.y += player.speed;
+
+            // Draw player
+            ctx.fillStyle = player.color;
+            ctx.beginPath();
+            ctx.moveTo(player.x + player.width / 2, player.y);
+            ctx.lineTo(player.x, player.y + player.height);
+            ctx.lineTo(player.x + player.width, player.y + player.height);
+            ctx.closePath();
+            ctx.fill();
+
+            // Update and draw bullets
+            bullets = bullets.filter(b => {
+                b.y -= b.speed;
+                ctx.fillStyle = b.color;
+                ctx.fillRect(b.x, b.y, b.width, b.height);
+                return b.y > 0;
+            });
+
+            // Update and draw enemies
+            let moveDown = false;
+            enemies.forEach(e => {
+                e.x += e.speed * e.direction;
+                if (e.x <= 0 || e.x >= canvas.width - e.width) {
+                    moveDown = true;
+                }
+
+                // Enemy shooting
+                e.shootTimer++;
+                if (e.shootTimer > 150 && Math.random() < 0.01) {
+                    enemyBullets.push({
+                        x: e.x + e.width / 2 - 2,
+                        y: e.y + e.height,
+                        width: 4,
+                        height: 15,
+                        speed: 4
+                    });
+                    e.shootTimer = 0;
+                }
+
+                // Draw enemy
+                ctx.fillStyle = '#ff0066';
+                ctx.fillRect(e.x, e.y, e.width, e.height);
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(e.x + 10, e.y + 10, 8, 8);
+                ctx.fillRect(e.x + 22, e.y + 10, 8, 8);
+            });
+
+            if (moveDown) {
+                enemies.forEach(e => {
+                    e.direction *= -1;
+                    e.y += 20;
+                });
+            }
+
+            // Update enemy bullets
+            enemyBullets = enemyBullets.filter(b => {
+                b.y += b.speed;
+                ctx.fillStyle = '#ff0066';
+                ctx.fillRect(b.x, b.y, b.width, b.height);
+
+                // Check collision with player
+                if (b.x < player.x + player.width && b.x + b.width > player.x &&
+                    b.y < player.y + player.height && b.y + b.height > player.y) {
+                    lives--;
+                    document.getElementById('lives').textContent = lives;
+                    createParticles(player.x + player.width / 2, player.y + player.height / 2, '#00ffff', 30);
+                    if (lives <= 0) {
+                        endGame();
+                    }
+                    return false;
+                }
+
+                return b.y < canvas.height;
+            });
+
+            // Check bullet-enemy collision
+            bullets.forEach((bullet, bIndex) => {
+                enemies.forEach((enemy, eIndex) => {
+                    if (bullet.x < enemy.x + enemy.width && bullet.x + bullet.width > enemy.x &&
+                        bullet.y < enemy.y + enemy.height && bullet.y + bullet.height > enemy.y) {
+                        bullets.splice(bIndex, 1);
+                        enemies.splice(eIndex, 1);
+                        score += 10;
+                        document.getElementById('score').textContent = score;
+                        createParticles(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#ff0066');
+                    }
+                });
+            });
+
+            // Update particles
+            particles = particles.filter(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life -= 0.02;
+
+                ctx.globalAlpha = p.life;
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, p.size, p.size);
+                ctx.globalAlpha = 1;
+
+                return p.life > 0;
+            });
+
+            // Check if wave is complete
+            if (enemies.length === 0) {
+                wave++;
+                document.getElementById('wave').textContent = wave;
+                score += wave * 50;
+                document.getElementById('score').textContent = score;
+                spawnWave();
+            }
+
+            // Check if enemies reached player
+            if (enemies.some(e => e.y + e.height >= player.y)) {
+                lives = 0;
+                endGame();
+            }
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        function endGame() {
+            gameRunning = false;
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('finalWave').textContent = wave;
+            document.getElementById('gameOver').classList.add('active');
+            loadHighScores();
+        }
+
+        function restartGame() {
+            document.getElementById('startBtn').style.display = 'inline-block';
+            startGame();
+        }
+
+        async function saveScore() {
+            const playerName = document.getElementById('playerName').value || 'Anonymous';
+            try {
+                await fetch('/api/scores', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        player: playerName,
+                        score: score,
+                        wave: wave
+                    })
+                });
+                loadHighScores();
+            } catch (error) {
+                console.error('Error saving score:', error);
+            }
+        }
+
+        async function loadHighScores() {
+            try {
+                const response = await fetch('/api/scores');
+                const scores = await response.json();
+                const scoresHTML = scores.map((s, i) =>
+                    `<div class="score-entry">
+                        <span>${i + 1}. ${s.player}</span>
+                        <span>${s.score} pts (Wave ${s.wave})</span>
+                    </div>`
+                ).join('');
+                document.getElementById('highScores').innerHTML =
+                    '<h3>🏆 High Scores 🏆</h3>' + scoresHTML;
+            } catch (error) {
+                console.error('Error loading scores:', error);
+            }
+        }
+    </script>
+</body>
+
+</html>
