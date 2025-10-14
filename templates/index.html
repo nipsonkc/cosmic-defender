@@ -105,6 +105,12 @@
             text-shadow: 0 0 28px rgba(123, 120, 255, .35);
         }
 
+        /* logo image size */
+        .brand img {
+            height: 40px;
+            display: block;
+        }
+
         .stats {
             display: flex;
             gap: 12px;
@@ -355,7 +361,11 @@
 
     <div class="container" id="gameWrap" style="display:none">
         <div class="hud">
-            <div class="brand">Cosmic Defender</div>
+            <!-- changed: text -> logo image -->
+            <div class="brand">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/120px-React-icon.svg.png"
+                    alt="Game Logo">
+            </div>
             <div class="stats">
                 <div class="chip">Score: <span id="uiScore">0</span></div>
                 <div class="chip">Lives: <span id="uiLives">3</span></div>
@@ -374,6 +384,8 @@
         <div class="btnbar">
             <button class="btn" id="btnPause">Pause</button>
             <button class="btn" id="btnMenu">Main Menu</button>
+            <!-- added: sound toggle -->
+            <button class="btn" id="btnSound">🔊 Sound On</button>
         </div>
     </div>
 
@@ -449,6 +461,16 @@
         document.getElementById('btnBack').onclick = returnToMenu;
         document.getElementById('btnSave').onclick = saveScore;
 
+        // added: sound toggle control binding
+        const btnSound = document.getElementById('btnSound');
+        let soundOn = true;
+        btnSound.onclick = () => {
+            soundOn = !soundOn;
+            btnSound.textContent = soundOn ? '🔊 Sound On' : '🔇 Sound Off';
+            if (!soundOn) stopMusic();
+            else if (running && !paused) startMusic();
+        };
+
         function startFromMenu() { menu.classList.add('hidden'); gameWrap.style.display = 'block'; startGame(); }
         function returnToMenu() { stopMusic(); running = false; showMenu(); }
         function showMenu() { gameWrap.style.display = 'none'; gameover.classList.add('hidden'); menu.classList.remove('hidden'); }
@@ -467,6 +489,7 @@
         let bgTimer = null; // simple melody loop
 
         function beep(freq, dur, type = 'sine', vol = .25) {
+            if (!soundOn) return; // added: respect sound toggle
             try {
                 const osc = audio.createOscillator();
                 const gain = audio.createGain();
@@ -510,7 +533,7 @@
 
         const player = {
             x: canvas.width / 2 - 20, y: canvas.height - 90, w: 40, h: 40,
-            speed: 7, cd: 0,
+            speed: 8, /* changed: 7 -> 8 */ cd: 0,
             shield: false, rapid: false, spread: false
         };
 
@@ -678,7 +701,18 @@
             enemies = enemies.filter(e => e.x > -900);
 
             // Collisions: enemy bullets -> player
-            for (const eb of enemyBullets) { if (hit(eb, player)) { eb.y = 9999; if (player.shield) { player.shield = false; sHit(); } else { lives--; sExp(); burst(player.x + player.w / 2, player.y + player.h / 2, '#ff5a00', 30); if (lives <= 0) { return endGame(); } } updateHUD(); } }
+            for (const eb of enemyBullets) {
+                if (hit(eb, player)) {
+                    eb.y = 9999;
+                    if (player.shield) { player.shield = false; sHit(); }
+                    else {
+                        lives--; sExp();
+                        burst(player.x + player.w / 2, player.y + player.h / 2, '#ff5a00', 30);
+                        if (lives <= 0) { return endGame(); }
+                    }
+                    updateHUD();
+                }
+            }
 
             // Collisions: powerups -> player
             for (const p of powerups) { if (hit(p, player)) { applyPower(p.k); p.y = 9999; } }
@@ -706,10 +740,12 @@
         }
 
         function saveScore() {
-            const n = (nameField.value || 'Player').slice(0, 20); const acc = shotsFired ? Math.round((shotsHit / shotsFired) * 100) : 0;
+            const n = (nameField.value || 'Player').slice(0, 20);
+            const acc = shotsFired ? Math.round((shotsHit / shotsFired) * 100) : 0;
             const rec = { n, score, wave, kills: enemiesKilled, acc, t: Date.now() };
             const list = JSON.parse(localStorage.getItem('cd_hs') || '[]');
-            list.push(rec); list.sort((a, b) => b.score - a.score); localStorage.setItem('cd_hs', JSON.stringify(list.slice(0, 25)));
+            list.push(rec); list.sort((a, b) => b.score - a.score);
+            localStorage.setItem('cd_hs', JSON.stringify(list.slice(0, 25)));
             renderScores(); nameField.value = '';
         }
 
