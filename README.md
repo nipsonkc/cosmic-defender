@@ -1,88 +1,94 @@
-# 🚀 Cosmic Defender - Space Shooter Game
+# 🚀 Cosmic Defender - Professional Space Shooter Game
 
-A retro-style space shooter game built with Python Flask backend and HTML5 Canvas frontend.
-
-## Features
-- **Wave-based gameplay** with increasing difficulty
-- **Score tracking system** with high scores leaderboard
-- **Smooth animations** with particle effects
-- **Responsive controls** - Arrow keys to move, Space to shoot
-- **Lives system** - Start with 3 lives
-- **Progressive difficulty** - More enemies each wave
-- **Enemy AI** - Enemies shoot back and move in formation
-
-## Technologies Used
-- **Backend**: Python Flask
-- **Frontend**: HTML5 Canvas, CSS3, Vanilla JavaScript
-- **Styling**: Custom CSS with animations and effects
-
-## Installation & Setup
-
-### Prerequisites
-- Python 3.7 or higher
-- pip (Python package installer)
-
-###  Project Structure**
-```
-cosmic-defender/
-├── app.py
-├── templates/
-│   └── index.html
-└── README.md
-```
-
-
-## HOW TO PLAY
-
- 1. Run the Game**
-```bash
-python app.py
-```
- 2. Open Your Browser**
-Navigate to: `http://localhost:5000`
-
- 3. Controls
-- **Arrow Keys**: Move your spaceship (left, right, up, down)
-- **Spacebar**: Fire bullets
-- **P Key**: Pause/Resume game
-
- 4. Gameplay
-1. Click "Start Game" to begin
-2. Destroy all enemies to advance to the next wave
-3. Avoid enemy bullets to preserve your lives
-4. Each wave increases in difficulty with more enemies
-5. Try to achieve the highest score!
-
- 5. Scoring
-- **10 points** per enemy destroyed
-- **Bonus points** for completing waves (50 × wave number)
-
-
-
-## Portfolio Description
-
-**Cosmic Defender** is a browser-based space shooter game showcasing:
-- Full-stack development (Python Flask + HTML5/CSS/JS)
-- Game development fundamentals
-- Canvas API and animation techniques
-- RESTful API design for score persistence
-- Responsive UI/UX design
-- Object-oriented programming principles
-
-## Future Enhancements
-- [ ] Add power-ups (shields, rapid fire, etc.)
-- [ ] Implement different enemy types
-- [ ] Add boss battles
-- [ ] Include sound effects and background music
-- [ ] Mobile touch controls support
-- [ ] Database integration for persistent high scores
-- [ ] Multiplayer mode
-
-## License
-MIT License - Feel free to use this project for learning and portfolio purposes!
-
-## Contributing
-Feel free to fork this project and submit pull requests with improvements!
+A modern, high-quality **space shooter game** built with **Python Flask** backend and **HTML5 Canvas** frontend. Features 3 unique levels, boss battles, power-ups, particle effects, and smooth gameplay.
 
 ---
-Made by Nipson K C
+
+## 🎮 Gameplay Overview
+
+- **3 Unique Levels**
+  - 🌌 **Asteroid Field** – Balanced gameplay
+  - 🌠 **Nebula Storm** – Fast-paced action
+  - 🌑 **Black Hole** – Ultimate challenge
+- **Wave-based combat** with progressive difficulty
+- **Boss battles** every 5 waves with unique attack patterns
+- **4 Enemy Types:** Basic, Fast, Tank, Shooter
+- **4 Power-ups:** Shield, Rapid Fire, Spread Shot, Extra Life
+- **Dynamic Scoring** and persistent high scores
+
+---
+
+## 🕹️ Controls
+
+| Action | Key |
+|:--|:--|
+| Move | Arrow Keys (← ↑ ↓ →) |
+| Fire | Space |
+| Pause / Resume | P |
+
+### Objective
+- Destroy enemies to advance through waves  
+- Collect power-ups to gain temporary boosts  
+- Defeat bosses to unlock new stages  
+- Avoid enemy fire and aim for the **highest score**
+
+### Scoring System
+| Enemy Type | Points |
+|:--|:--|
+| Basic | 10 |
+| Fast | 20 |
+| Tank | 30 |
+| Shooter | 25 |
+| Boss | 200 |
+| Wave Bonus | 50 × Wave Number |
+
+---
+
+## 🧠 Technical Features
+
+- Professional UI/UX with smooth transitions  
+- Particle effects for explosions and trails  
+- Modular, object-oriented architecture  
+- Background music and sound effects  
+- Persistent high-score tracking  
+
+---
+
+## 🛠️ Tech Stack
+
+**Backend**
+- Python 3.7+
+- Flask Framework
+
+**Frontend**
+- HTML5 Canvas for rendering
+- Vanilla JavaScript (ES6+) for logic
+- CSS3 for animations and styling
+- Web Audio API for sound effects
+
+---
+
+## 🧩 Code Architecture
+
+| Class | Function |
+|:--|:--|
+| `Game` | Core game loop and state management |
+| `Player` | Ship controls and actions |
+| `Enemy` | Enemy spawning and behavior |
+| `Boss` | Boss mechanics and special attacks |
+| `PowerUp` | Power-up logic |
+| `ParticleSystem` | Visual effects |
+| `AudioSystem` | Sound management |
+| `UIManager` | Handles HUD and interface |
+
+---
+
+## ⚙️ Installation & Setup
+
+### 1. Prerequisites
+- Python 3.7 or higher  
+- `pip` installed  
+
+### 2. Install Dependencies
+```bash
+pip install -r requirements.txt
