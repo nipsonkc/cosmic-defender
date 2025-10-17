@@ -1,11 +1,9 @@
 from flask import Flask, render_template, jsonify, request
-import json
-import os
 from datetime import datetime
 
 app = Flask(__name__)
 
-# Store high scores in memory (you can switch to a database later)
+# Store high scores in memory
 high_scores = []
 
 @app.route('/')
@@ -25,6 +23,7 @@ def save_score():
     score_entry = {
         'player': data.get('player', 'Anonymous'),
         'score': data.get('score', 0),
+        'level': data.get('level', 1),
         'wave': data.get('wave', 0),
         'timestamp': datetime.now().isoformat()
     }
@@ -32,8 +31,4 @@ def save_score():
     return jsonify({'success': True, 'entry': score_entry})
 
 if __name__ == '__main__':
-    # Create folders only if they don't exist
-    os.makedirs('templates', exist_ok=True)
-    os.makedirs('static', exist_ok=True)
-
     app.run(debug=True, port=5000)
