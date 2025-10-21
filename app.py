@@ -1,34 +1,27 @@
-from flask import Flask, render_template, jsonify, request
-from datetime import datetime
+from flask import Flask
+from config import Config
+from routes import game_bp, score_bp
 
-app = Flask(__name__)
-
-# Store high scores in memory
-high_scores = []
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/api/scores', methods=['GET'])
-def get_scores():
-    """Get top 10 high scores"""
-    sorted_scores = sorted(high_scores, key=lambda x: x['score'], reverse=True)[:10]
-    return jsonify(sorted_scores)
-
-@app.route('/api/scores', methods=['POST'])
-def save_score():
-    """Save a new high score"""
-    data = request.json
-    score_entry = {
-        'player': data.get('player', 'Anonymous'),
-        'score': data.get('score', 0),
-        'level': data.get('level', 1),
-        'wave': data.get('wave', 0),
-        'timestamp': datetime.now().isoformat()
-    }
-    high_scores.append(score_entry)
-    return jsonify({'success': True, 'entry': score_entry})
+def create_app(config_class=Config):
+    """Application factory pattern"""
+    app = Flask(__name__)
+    app.config.from_object(config_class)
+    
+    # Register blueprints
+    app.register_blueprint(game_bp)
+    app.register_blueprint(score_bp)
+    
+    # Root route
+    @app.route('/')
+    def index():
+        from flask import render_template
+        return render_template('index.html')
+    
+    return app
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app = create_app()
+    app.run(
+        debug=app.config['DEBUG'],
+        port=app.config['PORT']
+    )
