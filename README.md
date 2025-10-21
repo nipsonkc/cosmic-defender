@@ -1,94 +1,52 @@
-# 🚀 Cosmic Defender - Professional Space Shooter Game
+# 🚀 Cosmic Defender - Professional Space Shooter
 
-A modern, high-quality **space shooter game** built with **Python Flask** backend and **HTML5 Canvas** frontend. Features 3 unique levels, boss battles, power-ups, particle effects, and smooth gameplay.
+A modern, Python  space shooter game with proper industry-standard folder structure, 3 unique levels, boss battles, and advanced game mechanics.
 
----
+## 📊 Technology Stack
 
-## 🎮 Gameplay Overview
+- **Frontend**: HTML5 Canvas, Vanilla JavaScript (ES6+), CSS3
+- **Backend**: Flask, Python 3.7+
+- **Architecture**: MVC Pattern with RESTful API
 
-- **3 Unique Levels**
-  - 🌌 **Asteroid Field** – Balanced gameplay
-  - 🌠 **Nebula Storm** – Fast-paced action
-  - 🌑 **Black Hole** – Ultimate challenge
-- **Wave-based combat** with progressive difficulty
-- **Boss battles** every 5 waves with unique attack patterns
-- **4 Enemy Types:** Basic, Fast, Tank, Shooter
-- **4 Power-ups:** Shield, Rapid Fire, Spread Shot, Extra Life
-- **Dynamic Scoring** and persistent high scores
 
----
+## 🎮 Features
 
-## 🕹️ Controls
+### Gameplay
+- **3 Unique Levels** with distinct themes and difficulty
+- **Wave-based Combat** with progressive difficulty
+- **Boss Battles** every 5 waves with multi-phase attacks
+- **4 Enemy Types**: Basic, Fast, Tank, Shooter
+- **4 Power-ups**: Shield, Rapid Fire, Spread Shot, Extra Life
+- **Performance Rating System**: S, A, B, C, D, F rankings
 
-| Action | Key |
-|:--|:--|
-| Move | Arrow Keys (← ↑ ↓ →) |
-| Fire | Space |
-| Pause / Resume | P |
+### Technical
+- **Python Backend** handles all game logic
+- **RESTful API** for game state management
+- **Modular Architecture** with separated concerns
+- **Professional Folder Structure**
+- **Particle Effects & Sound System**
+- **Responsive UI** with smooth animations
 
-### Objective
-- Destroy enemies to advance through waves  
-- Collect power-ups to gain temporary boosts  
-- Defeat bosses to unlock new stages  
-- Avoid enemy fire and aim for the **highest score**
+## 🚀 Installation
 
-### Scoring System
-| Enemy Type | Points |
-|:--|:--|
-| Basic | 10 |
-| Fast | 20 |
-| Tank | 30 |
-| Shooter | 25 |
-| Boss | 200 |
-| Wave Bonus | 50 × Wave Number |
+### Prerequisites
+- Python 3.7 or higher
+- pip
 
----
+### Setup
 
-## 🧠 Technical Features
+1. **Clone/Download the project**
 
-- Professional UI/UX with smooth transitions  
-- Particle effects for explosions and trails  
-- Modular, object-oriented architecture  
-- Background music and sound effects  
-- Persistent high-score tracking  
-
----
-
-## 🛠️ Tech Stack
-
-**Backend**
-- Python 3.7+
-- Flask Framework
-
-**Frontend**
-- HTML5 Canvas for rendering
-- Vanilla JavaScript (ES6+) for logic
-- CSS3 for animations and styling
-- Web Audio API for sound effects
-
----
-
-## 🧩 Code Architecture
-
-| Class | Function |
-|:--|:--|
-| `Game` | Core game loop and state management |
-| `Player` | Ship controls and actions |
-| `Enemy` | Enemy spawning and behavior |
-| `Boss` | Boss mechanics and special attacks |
-| `PowerUp` | Power-up logic |
-| `ParticleSystem` | Visual effects |
-| `AudioSystem` | Sound management |
-| `UIManager` | Handles HUD and interface |
-
----
-
-## ⚙️ Installation & Setup
-
-### 1. Prerequisites
-- Python 3.7 or higher  
-- `pip` installed  
-
-### 2. Install Dependencies
+2. **Install dependencies**:
 ```bash
 pip install -r requirements.txt
+```
+
+3. **Run the game**:
+```bash
+python app.py
+```
+
+4. **Play**:
+Open your browser and navigate to:
+

@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cosmic Defender - Space Shooter</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/game.css') }}">
 </head>
 <body>
     <!-- Animated Background -->
@@ -209,15 +211,30 @@
         </div>
     </div>
 
-    <!-- Load Scripts -->
-    <script src="{{ url_for('static', filename='js/audio.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/particle.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/player.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/enemy.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/boss.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/powerup.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/levels.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/ui.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/game.js') }}"></script>
+    <!-- Load Scripts in Order -->
+    <script src="{{ url_for('static', filename='js/utils/helpers.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/utils/api.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/systems/particle.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/systems/audio.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/entities/player.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/entities/enemy.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/entities/boss.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/entities/powerup.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/core/input.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/core/renderer.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/ui/hud.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/ui/menu.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/ui/gameover.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/core/game.js') }}"></script>
+    
+    <script>
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            MenuUI.init();
+            HUD.init();
+            GameOverUI.init();
+        });
+    </script>
 </body>
 </html>
+                    
